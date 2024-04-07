@@ -1,0 +1,21 @@
+name: Auto update
+on:
+    schedule:
+      - cron: "0 6 * * *"
+    workflow_dispatch:
+
+env:
+    OWNER: AtaraxiaSjel
+    REPO: antizapret-sing-box-geo
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v4
+      - name: Build githubreleaser
+        run: go build -v -o ./githubreleaser ./cmd/githubreleaser
+      - name: Release antizapret
+        run: ./githubreleaser -owner $OWNER -repo $REPO -token ${{ secrets.GH_TOKEN }}
